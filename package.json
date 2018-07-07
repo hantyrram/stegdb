@@ -1,0 +1,14 @@
+{
+  "name": "stegdb",
+  "version": "1.0.0",
+  "description": "Steganographer Database Layer Implementation",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha DBConnectionTest"
+  },
+  "author": "ronskielog",
+  "license": "ISC",
+  "dependencies": {
+    "steg": "file:../steg"
+  }
+}
