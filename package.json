@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "description": "Steganographer Database Layer Implementation",
   "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hantyrram/stegdb.git"
+  },
   "scripts": {
     "test": "mocha DBDriverTest"
   },
