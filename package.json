@@ -4,11 +4,14 @@
   "description": "Steganographer Database Layer Implementation",
   "main": "index.js",
   "scripts": {
-    "test": "mocha DBConnectionTest"
+    "test": "mocha DBDriverTest"
   },
   "author": "ronskielog",
   "license": "ISC",
   "dependencies": {
     "steg": "file:../steg"
+  },
+  "devDependencies": {
+    "mocha": "^5.2.0"
   }
 }
