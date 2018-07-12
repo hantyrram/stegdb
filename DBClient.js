@@ -13,14 +13,14 @@ class ConnectionError extends Error{
  * 
  * Connection class accepts a path to the media file that would serve as database, checks the path if it is
  * an existing and accessible file.
- * @param {String} pathToFile - The path to the source of the file that will serve as a database e.g. an image file
+ * @param {String} path - The path to the source of the file that will serve as a database e.g. an image file
  */
-class Connection{
- constructor(pathToFile){
-  if(pathToFile === undefined || typeof pathToFile !== 'string') 
+class DBClient{
+ constructor(path){
+  if(path === undefined || typeof path !== 'string') 
    throw new ConnectionError('Invalid path');
   //else
-  this.source = pathToFile;
+  this.source = path;
  }
 
  /**
@@ -31,9 +31,6 @@ class Connection{
  connect(){
   let self = this;
   return new Promise((resolve,reject)=>{
-   
-   let initializedDB;
-
    if(this.source){
     let fs = require('fs');
     //Check File Access and Existence
@@ -63,4 +60,4 @@ class Connection{
  } 
 }
 
-module.exports = Connection;
+module.exports = DBClient;

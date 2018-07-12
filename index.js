@@ -2,5 +2,5 @@
 process.env.config = require('./config');
 
 
-module.exports = require('./DBConnection');
+module.exports = require('./DBClient');
 

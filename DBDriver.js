@@ -64,16 +64,17 @@ class DBDriver extends EventEmitter{
 
 
  /**
-  * Inserts a document unto the collection 
-  * @param {String} collectionName 
-  * @param {Object} document - document to insert on to the collection
-  * @return {Number} - the index where of the document on the collection
+  * Inserts a single document unto the collection.
+  * @param {String} collectionName The name of the collection
+  * @param {Object} document - document to insert on to the collection.
+  * @return {Object} - 
   */
- insert(collectionName,document){
-  if(this.data.collections[collectionName] !== undefined){
-   let documents = this.data.collections[collectionName];
-   document._id =  _idGenerator(_retrieveLastId(documents)).next().value;//?simplify id generation
-   return this.data.collections[collectionName].push(document);
+ insertOne(collectionName,document){
+  let collection =  this.data.collections[collectionName];
+  if(collection !== undefined){
+   document._id =  collection._idGenerator.next().value;
+   collection.documents.push(document);
+   return {insertedId: document._id};
   }
   throw new DBDriverError('Collection Does Not Exist');
  } 
@@ -103,41 +104,52 @@ class DBDriver extends EventEmitter{
   let self = this;  
 
   if(self[collectionName]) throw new DBDriverError('Collection Name Already Exists');
-
-  let thisWithNewCollection = Object.defineProperty(self,collectionName,
+  // create a Collection object with methods borrowed from DBDriver
+  let collection = {};
+  collection.name = collectionName;
+  collection.documents = documents;
+  collection.insertOne = self.insertOne.bind(self,collectionName);
+  collection.selectAll = self.selectAll.bind(self,collectionName);
+  collection.findOne = self.findOne.bind(self,collectionName);
+  //add the id generator to the newly created collection so that it can generate ids 
+  Object.defineProperty(collection,'_idGenerator',{
+    value: _idGenerator(_retrieveLastId(collection.documents)), //this here is the collection object
+    configurable: false,
+    writable: false
+  });
+  //add the collection as a property to db
+  Object.defineProperty(self,collectionName,
    {
      get : function(){
-       // create a Collection object with methods borrowed from DBDriver
-       self.collections[collectionName] = {}; 
-       self.collections[collectionName].documents = documents;
-       //curried collectionName collection.insert(document)
-       self.collections[collectionName].insert = self.insert.bind(self,collectionName);
-       self.collections[collectionName].selectAll = self.selectAll.bind(self,collectionName);
-       return self.collections[collectionName];
+       self.data.collections[collectionName] = collection;
+       return self.data.collections[collectionName];
      } 
    });
    
-   return thisWithNewCollection.data.collections[collectionName];
+   return self[collectionName];
  }
+
+ /**
+  * Returns one document that satisfies the specified query criteria on the collection
+  * @see https://docs.mongodb.com/manual/reference/method/db.collection.findOne/
+  * @param {Object} query 
+  * @param {Object} projection 
+  * @return {Object} a single document that satisfies the query,projection criteria, null if not found
+  */
+ findOne(collectionName,query,projection){
+  let collection = this.data.collections[collectionName];  
+  if(!collection) return null;
+  if(query && Object.getOwnPropertyNames(query).length === 0){//if query = {}
+    return collection.documents.find(doc=>{
+      if(doc) return true;
+    });
+   }
+  }
+  //else use the queryFilter  
+  
 }
 
-/**
- * A Collection
- * @param {String} name of the collection
- * @param {Array} objects array
- * @param {DBDriver} databaseDriver 
- */
-function Collection(databaseDriver,name,objects=[]){
- this.databaseDriver = databaseDriver;
- this.name = name;
- this.documents = objects;
-}
-
-/**
- * Internal functions
- */
-
-
+//Internal functions
  
 /**
  * Retrieves the last Secret ID that can be used from the secrets array.

@@ -4,9 +4,9 @@ describe('Connection',function(){
 
  describe('#Construction',function(){
   it('It throws a ConnectionError when created without a path',function(){
-   let DBConnection = require('./DBConnection');
+   let DBClient = require('./DBClient');
    assert.throws(function(){
-    let dbConnection = new DBConnection();
+    let dbClient = new DBClient();
    },function(e){
     return e.name === 'ConnectionError';
    });
@@ -15,15 +15,15 @@ describe('Connection',function(){
 
  describe('#connect',function(){
   it('Returns a promise',function(){
-   let DBConnection = require('./DBConnection');
-   dbConnection = new DBConnection('data/test.bmp');
-   assert.ok(dbConnection.connect() instanceof Promise);
+   let DBClient = require('./DBClient');
+   dbClient = new DBClient('data/test.bmp');
+   assert.ok(dbClient.connect() instanceof Promise);
   });
 
   it('The promise resolves an instance of DBDriver when given a valid source path',function(done){
-   let DBConnection = require('./DBConnection');
-   dbConnection = new DBConnection('data/test.bmp');
-   dbConnection.connect().then(db=>{
+   let DBClient = require('./DBClient');
+   DBClient = new DBClient('data/test.bmp');
+   dbClient.connect().then(db=>{
     assert.ok(db instanceof require('./DBDriver'));
     done();
    }).catch(e=>{console.log(e);done();});   
