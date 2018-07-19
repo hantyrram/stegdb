@@ -1,0 +1,4 @@
+DBDriver.findOne
+  - accept a query filter, implement the $eq operator
+
+--DONE--      

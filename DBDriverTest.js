@@ -1,6 +1,7 @@
 const assert = require('assert');
 
 describe('DBDriver',function(){
+
   beforeEach(function(){
     delete require.cache[require.resolve('./DBDriver')];
     delete require.cache[require.resolve('steg')];
@@ -58,6 +59,31 @@ describe('DBDriver',function(){
     });
   });
 
+  describe('#insertMany()',function(){
+    it('It accepts arrays of documents and returns the bulkWriteResult',function(done){
+      let DBDriver = require('./DBDriver');
+      let dbDriver = new DBDriver('./data/sample.bmp');
+      dbDriver.init().then((db)=>{
+        db.createCollection('myCollection');
+        let documents = [];
+        documents.push({username:'user one',password:'passwordOne'});
+        documents.push({username:'user two',password:'passwordTwo'});
+        documents.push({username:'user three',password:'passwordThree'});
+        documents.push({username:'user four',password:'passwordFour'});
+        documents.push({username:'user five',password:'passwordFive'});
+        
+        let result = db.myCollection.insertMany(documents);
+        
+        let expectedNumberOfIds = 5;
+        assert.strictEqual(result.insertedIds.length,expectedNumberOfIds);
+        done();
+      }).catch(e=>{
+        console.log(e);
+        done();
+      });
+    });
+  });
+
   describe('#findOne()',function(){
     it('It returns a single document on the collection when called without query and projection',function(done){
       let DBDriver = require('./DBDriver');
@@ -88,7 +114,7 @@ describe('DBDriver',function(){
 
         db.myCollection.insertOne({fieldOne:'another value 3',fieldTwo:'another value 3'});//sample
         let result = db.myCollection.findOne({fieldOne:docToFind.fieldOne});        
-        assert.strictEqual(result,docToFind);
+        assert.deepStrictEqual(result,docToFind);
         done();
       }).catch(e=>{
         console.log(e);
@@ -96,6 +122,27 @@ describe('DBDriver',function(){
       });
     });
   });
+
+
+
+  // describe('Queries with query criterias',function(){
+  //   it('It satisfies $gt query operations',function(done){
+  //     let DBDriver = require('./DBDriver');
+  //     let dbDriver = new DBDriver('./data/sample.bmp');
+  //     dbDriver.init().then((db)=>{
+  //       db.createCollection('myCollection');
+  //       let sample = db.myCollection.insertOne({name:'Person Aged 34',age: 34});
+  //       let sample = db.myCollection.insertOne({name:'Person Aged 37',age: 37});
+  //       let sample = db.myCollection.insertOne({name:'Person Aged 12',age: 12});
+  //       let result = db.myCollection.findOne();
+  //       assert.strictEqual(result._id,sample.insertedId)
+  //       done();
+  //     }).catch(e=>{
+  //       console.log(e);
+  //       done();
+  //     });
+  //   });
+  // });
 
   
 });

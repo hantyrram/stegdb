@@ -8,7 +8,8 @@
     "url": "https://github.com/hantyrram/stegdb.git"
   },
   "scripts": {
-    "test": "mocha DBDriverTest"
+    "test": "mocha DBDriverTest",
+    "jsdoc": "node_modules/.bin/jsdoc"
   },
   "author": "ronskielog",
   "license": "ISC",
@@ -16,6 +17,7 @@
     "steg": "file:../steg"
   },
   "devDependencies": {
+    "jsdoc": "^3.5.5",
     "mocha": "^5.2.0"
   }
 }
