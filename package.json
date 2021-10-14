@@ -17,7 +17,7 @@
     "steg": "file:../steg"
   },
   "devDependencies": {
-    "jsdoc": "^3.5.5",
+    "jsdoc": "^3.6.7",
     "mocha": "^5.2.0"
   }
 }
