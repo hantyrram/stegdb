@@ -4,4 +4,4 @@
   
   See [Docs](https://hantyrram.github.io/stegdb) 
 
-*This is a work in progress*
+*Still under development*
