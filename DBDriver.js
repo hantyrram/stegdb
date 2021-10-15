@@ -11,11 +11,11 @@ class DBDriverError extends Error{
 }
 /**
  * Database driver implementation with an intended use in conjunction with 
- * the steg @see https://github.com/hantyrram/steg package. Serves as a 
- * layer on top, making the steg package the storage engine. 
+ * the [Steg]{@link https://github.com/hantyrram/steg} package. This serves as a 
+ * layer on top, making the [Steg]{@link https://github.com/hantyrram/steg} package as the storage engine. 
  * 
  * This can also be used with other storage engine implementations
- * conforming to the steg storage engine's interface
+ * conforming to the [Steg's]{@link https://github.com/hantyrram/steg} storage engine's interface
  * 
  * DBDriver extends EventEmitter
  * @class
